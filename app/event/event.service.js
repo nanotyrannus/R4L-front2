@@ -9,17 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var HomeComponent = (function () {
-    function HomeComponent() {
+var http_1 = require("@angular/http");
+var EventService = (function () {
+    function EventService(http) {
+        this.http = http;
     }
-    HomeComponent = __decorate([
-        core_1.Component({
-            selector: "my-home",
-            template: "\n    <div> Radar for Life </div>\n    "
-        }), 
-        __metadata('design:paramtypes', [])
-    ], HomeComponent);
-    return HomeComponent;
+    EventService.prototype.getEvents = function () {
+        return this.http.post("http://" + window.location.hostname + ":3000/ping", { "hello": "world" });
+    };
+    EventService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [http_1.Http])
+    ], EventService);
+    return EventService;
 }());
-exports.HomeComponent = HomeComponent;
-//# sourceMappingURL=home.component.js.map
+exports.EventService = EventService;
+//# sourceMappingURL=event.service.js.map

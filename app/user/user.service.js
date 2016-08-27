@@ -9,17 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var AppComponent = (function () {
-    function AppComponent() {
+var http_1 = require("@angular/http");
+var UserService = (function () {
+    function UserService(http) {
+        this.http = http;
     }
-    AppComponent = __decorate([
-        core_1.Component({
-            selector: "app-component",
-            template: "\n  <a routerLink=\"/\">HOME</a>\n  <a routerLink=\"/events\">EVENTS</a>\n  <a routerLink=\"/map\">MAP</a>\n  <router-outlet></router-outlet>\n  "
-        }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
+    UserService.prototype.create = function (username, email, firstName, lastName, password) {
+        return this.http.post(window.location.hostname + ":3000/user/create", {
+            "username": username,
+            "password": password,
+            "email": email,
+            "first_name": firstName,
+            "last_name": lastName
+        });
+    };
+    UserService.prototype.login = function () { };
+    UserService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [http_1.Http])
+    ], UserService);
+    return UserService;
 }());
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+exports.UserService = UserService;
+//# sourceMappingURL=user.service.js.map

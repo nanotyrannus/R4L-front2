@@ -9,20 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var FirstComponent = (function () {
-    function FirstComponent() {
+var UserLoginComponent = (function () {
+    function UserLoginComponent() {
     }
-    FirstComponent.prototype.ngOnInit = function () {
-        this.date = new Date();
-    };
-    FirstComponent = __decorate([
+    __decorate([
+        core_1.Input('str'), 
+        __metadata('design:type', String)
+    ], UserLoginComponent.prototype, "someString", void 0);
+    UserLoginComponent = __decorate([
         core_1.Component({
-            selector: "my-first",
-            template: "\n        <div>First Component Loaded {{ date }}</div>\n    "
+            selector: "login-component",
+            template: "<label>Username or Email</label><input type=\"text\">"
         }), 
         __metadata('design:paramtypes', [])
-    ], FirstComponent);
-    return FirstComponent;
+    ], UserLoginComponent);
+    return UserLoginComponent;
 }());
-exports.FirstComponent = FirstComponent;
-//# sourceMappingURL=first.component.js.map
+exports.UserLoginComponent = UserLoginComponent;
+//# sourceMappingURL=user-login.component.js.map

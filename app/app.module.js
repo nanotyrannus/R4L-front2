@@ -11,12 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var forms_1 = require('@angular/forms');
+var app_routing_1 = require('./routing/app.routing');
+var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
-var first_component_1 = require('./first.component');
-var home_component_1 = require('./home.component');
-var events_component_1 = require('./events.component');
-var leaflet_map_component_1 = require('./leaflet-map.component');
-var app_routing_1 = require('./app.routing');
+var home_component_1 = require('./home/home.component');
+var user_login_component_1 = require('./user/user-login.component');
+var event_component_1 = require('./event/event.component');
+var leaflet_map_component_1 = require('./leaflet-map/leaflet-map.component');
+var data_service_1 = require('./data.service');
+var event_service_1 = require('./event/event.service');
+var user_service_1 = require('./user/user.service');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -25,16 +29,21 @@ var AppModule = (function () {
             imports: [
                 platform_browser_1.BrowserModule,
                 forms_1.FormsModule,
-                app_routing_1.routing
+                app_routing_1.routing,
+                http_1.HttpModule
             ],
             declarations: [
                 app_component_1.AppComponent,
                 home_component_1.HomeComponent,
-                first_component_1.FirstComponent,
+                user_login_component_1.UserLoginComponent,
                 leaflet_map_component_1.LeafletMapComponent,
-                events_component_1.EventsComponent
+                event_component_1.EventComponent
             ],
-            providers: [],
+            providers: [
+                data_service_1.DataService,
+                event_service_1.EventService,
+                user_service_1.UserService
+            ],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])

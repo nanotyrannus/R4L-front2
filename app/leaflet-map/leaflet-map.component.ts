@@ -12,9 +12,15 @@ import * as L from "leaflet"
 })
 
 export class LeafletMapComponent implements OnInit {
-    leafletMap: any
+    private leafletMap: any
+
+    constructor() {}
+
     ngOnInit() {
-        console.log(L)
+        /**
+         * Since this comp is destroyed when routed, call PolygonService.start on init
+         * start() should only poll the server if this component corresponds to a different event than before
+         */
         this.leafletMap = L.map("map").setView([34.198649, -118.174585], 15)
         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -22,5 +28,13 @@ export class LeafletMapComponent implements OnInit {
             id: 'your.mapbox.project.id',
             accessToken: 'pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw'
         }).addTo(this.leafletMap);
+        var circle = L.circle([34.198, -118.174], 500)
+        circle.addTo(this.leafletMap)
+    }
+    
+    notify() {
+        /**
+         * should be called by polygonservice when new data is recieved
+         */
     }
 }

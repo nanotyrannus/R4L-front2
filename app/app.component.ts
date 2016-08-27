@@ -2,7 +2,7 @@ import { Component } from "@angular/core"
 
 
 @Component({
-  selector: "my-app",
+  selector: "app-component",
   template: `
   <a routerLink="/">HOME</a>
   <a routerLink="/events">EVENTS</a>

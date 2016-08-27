@@ -1,17 +1,12 @@
 "use strict";
 var router_1 = require('@angular/router');
-var first_component_1 = require('./first.component');
-var home_component_1 = require('./home.component');
-var leaflet_map_component_1 = require('./leaflet-map.component');
-var events_component_1 = require('./events.component');
+var home_component_1 = require('../home/home.component');
+var leaflet_map_component_1 = require('../leaflet-map/leaflet-map.component');
+var event_component_1 = require('../event/event.component');
 var appRoutes = [
     {
         path: '',
         component: home_component_1.HomeComponent
-    },
-    {
-        path: 'first',
-        component: first_component_1.FirstComponent
     },
     {
         path: 'map',
@@ -19,7 +14,7 @@ var appRoutes = [
     },
     {
         path: 'events',
-        component: events_component_1.EventsComponent
+        component: event_component_1.EventComponent
     }
 ];
 exports.routing = router_1.RouterModule.forRoot(appRoutes);

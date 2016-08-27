@@ -1,20 +1,9 @@
 import { Component } from "@angular/core"
-import { ContainsPipe } from "./contains.pipe"
+import { ContainsPipe } from "../shared/contains.pipe"
 
 @Component({
     selector: 'my-events',
-    template: `
-    <input [(ngModel)]="query" placeholder="Search">
-    <span *ngIf="query">{{query}}</span>
-    <ul>
-    <li *ngFor="let event of events" >
-    <div class="event-container" *ngIf="event.name | contains:query">
-        <div class="event-title">{{ event.name | uppercase }}</div>
-        <div class="event-body">The {{ event.name }} event has {{ event.sites }} sites to be evaluated.</div>
-    </div>
-    </li>
-    </ul>
-    `,
+    templateUrl: "app/event/event.html",
     styles: [
         `ul { list-style-type: none; }`,
         `.event-title { font-size: 1.5em; }`    
@@ -22,7 +11,7 @@ import { ContainsPipe } from "./contains.pipe"
     pipes: [ ContainsPipe ]
 })
 
-export class EventsComponent {
+export class EventComponent {
     query: string
     events: Event[] = [
         new Event("Tacloban", 20),
@@ -39,5 +28,7 @@ export class EventsComponent {
 }
 
 class Event {
-    constructor(public name: string, public sites: Number) {}
+    constructor(public name: string, public sites: Number) {
+        
+    }
 }

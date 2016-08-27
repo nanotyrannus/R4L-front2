@@ -1,0 +1,10 @@
+<input [(ngModel)]="query" placeholder="Search">
+<span *ngIf="query">{{query}}</span>
+<ul>
+    <li *ngFor="let event of events">
+        <div class="event-container" *ngIf="event.name | contains:query">
+            <div class="event-title">{{ event.name | uppercase }}</div>
+            <div class="event-body">The {{ event.name }} event has {{ event.sites }} sites to be evaluated.</div>
+        </div>
+    </li>
+</ul>

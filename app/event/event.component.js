@@ -9,9 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var contains_pipe_1 = require("./contains.pipe");
-var EventsComponent = (function () {
-    function EventsComponent() {
+var contains_pipe_1 = require("../shared/contains.pipe");
+var EventComponent = (function () {
+    function EventComponent() {
         this.events = [
             new Event("Tacloban", 20),
             new Event("Nepal", 15),
@@ -25,10 +25,10 @@ var EventsComponent = (function () {
             new Event("Pyongyang", 210)
         ];
     }
-    EventsComponent = __decorate([
+    EventComponent = __decorate([
         core_1.Component({
             selector: 'my-events',
-            template: "\n    <input [(ngModel)]=\"query\" placeholder=\"Search\">\n    <span *ngIf=\"query\">{{query}}</span>\n    <ul>\n    <li *ngFor=\"let event of events\" >\n    <div class=\"event-container\" *ngIf=\"event.name | contains:query\">\n        <div class=\"event-title\">{{ event.name | uppercase }}</div>\n        <div class=\"event-body\">The {{ event.name }} event has {{ event.sites }} sites to be evaluated.</div>\n    </div>\n    </li>\n    </ul>\n    ",
+            templateUrl: "app/event/event.html",
             styles: [
                 "ul { list-style-type: none; }",
                 ".event-title { font-size: 1.5em; }"
@@ -36,10 +36,10 @@ var EventsComponent = (function () {
             pipes: [contains_pipe_1.ContainsPipe]
         }), 
         __metadata('design:paramtypes', [])
-    ], EventsComponent);
-    return EventsComponent;
+    ], EventComponent);
+    return EventComponent;
 }());
-exports.EventsComponent = EventsComponent;
+exports.EventComponent = EventComponent;
 var Event = (function () {
     function Event(name, sites) {
         this.name = name;
@@ -47,4 +47,4 @@ var Event = (function () {
     }
     return Event;
 }());
-//# sourceMappingURL=events.component.js.map
+//# sourceMappingURL=event.component.js.map
