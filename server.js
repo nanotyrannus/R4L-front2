@@ -6,20 +6,20 @@ var parser = require("xml2js").Parser()
 var co = require("co")
 var pg = require("co-pg")(require("pg"))
 
-const connectionString = "postgres://ryan:1234@localhost:5432/postgres"
+// const connectionString = "postgres://ryan:1234@localhost:5432/postgres"
 
-pg.defaults.poolSize = 100
+// pg.defaults.poolSize = 100
 
-co(function* () {
-    try {
-        console.time("query")
-        yield query(`delete from test`)
-        yield query(`insert into test values ('hey')`, 500)
-        console.timeEnd("query")        
-    } catch (e) {
-        console.error(e)
-    }
-})
+// co(function* () {
+//     try {
+//         console.time("query")
+//         yield query(`delete from test`)
+//         yield query(`insert into test values ('hey')`, 500)
+//         console.timeEnd("query")        
+//     } catch (e) {
+//         console.error(e)
+//     }
+// })
 
 function* query(queryString, repeats) {
         try {

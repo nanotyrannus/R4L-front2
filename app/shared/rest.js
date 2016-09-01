@@ -10,19 +10,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
-var config_1 = require("../shared/config");
-var EventService = (function () {
-    function EventService(http) {
+var config_1 = require("./config");
+var Rest = (function () {
+    function Rest(http) {
         this.http = http;
     }
-    EventService.prototype.getEvents = function () {
-        return this.http.post(config_1.baseUrl + "/ping", { "hello": "world" });
+    Rest.prototype.post = function (endpoint, body, options) {
+        return this.http.post("" + config_1.baseUrl + endpoint, body, options);
     };
-    EventService = __decorate([
+    Rest.prototype.get = function (endpoint) { };
+    Rest = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], EventService);
-    return EventService;
+    ], Rest);
+    return Rest;
 }());
-exports.EventService = EventService;
-//# sourceMappingURL=event.service.js.map
+exports.Rest = Rest;
+//# sourceMappingURL=rest.js.map

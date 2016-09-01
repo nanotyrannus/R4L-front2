@@ -9,21 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
 var data_service_1 = require("../data.service");
 var event_service_1 = require("../event/event.service");
+var core_2 = require("angular2-cookie/core");
+var user_signup_component_1 = require("../user/user-signup.component");
+var user_login_component_1 = require("../user/user-login.component");
 require("/app/shared/rxjs-operators");
 var HomeComponent = (function () {
-    function HomeComponent(dataService, eventService) {
+    function HomeComponent(dataService, eventService, http, cookieService) {
         this.dataService = dataService;
         this.eventService = eventService;
+        this.http = http;
+        this.cookieService = cookieService;
         this.myString = "hello";
+        this.isNewUser = false;
     }
     HomeComponent.prototype.ngOnInit = function () {
         console.log("Home Component Initialized!");
-        this.ping();
-    };
-    HomeComponent.prototype.test = function () {
-        console.log("TEST");
     };
     HomeComponent.prototype.getData = function () {
         var _this = this;
@@ -33,19 +36,24 @@ var HomeComponent = (function () {
         }, function (error) { console.error(error); });
     };
     HomeComponent.prototype.ping = function () {
-        this.eventService.getEvents()
+        this.http.get("http://localhost:3030/ping_")
             .subscribe(function (data) {
             console.log(data);
         }, function (error) {
             console.error(error);
         });
     };
+    HomeComponent.prototype.onChangeForm = function (isNewUser) {
+        console.log("onChangeForm called");
+        this.isNewUser = isNewUser;
+    };
     HomeComponent = __decorate([
         core_1.Component({
             selector: "my-home",
-            templateUrl: "/app/home/home.html"
+            templateUrl: "/app/home/home.html",
+            directives: [user_signup_component_1.UserSignupComponent, user_login_component_1.UserLoginComponent]
         }), 
-        __metadata('design:paramtypes', [data_service_1.DataService, event_service_1.EventService])
+        __metadata('design:paramtypes', [data_service_1.DataService, event_service_1.EventService, http_1.Http, core_2.CookieService])
     ], HomeComponent);
     return HomeComponent;
 }());

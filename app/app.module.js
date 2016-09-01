@@ -21,6 +21,7 @@ var leaflet_map_component_1 = require('./leaflet-map/leaflet-map.component');
 var data_service_1 = require('./data.service');
 var event_service_1 = require('./event/event.service');
 var user_service_1 = require('./user/user.service');
+var core_2 = require("angular2-cookie/core");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -42,7 +43,8 @@ var AppModule = (function () {
             providers: [
                 data_service_1.DataService,
                 event_service_1.EventService,
-                user_service_1.UserService
+                user_service_1.UserService,
+                core_2.CookieService
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 

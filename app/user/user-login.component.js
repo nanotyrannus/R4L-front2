@@ -9,19 +9,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
+var config_1 = require("../shared/config");
+require("/app/shared/rxjs-operators");
 var UserLoginComponent = (function () {
-    function UserLoginComponent() {
+    function UserLoginComponent(http) {
+        this.http = http;
+        this.onChangeForm = new core_1.EventEmitter();
     }
+    UserLoginComponent.prototype.login = function () {
+        var requestOptions = new http_1.RequestOptions({
+            "withCredentials": true
+        });
+        this.http.post(config_1.baseUrl + "/user/login", {
+            "username": this.username,
+            "password": this.password
+        }, requestOptions).subscribe(function (data) {
+            console.log(data.json());
+        }, function (error) {
+            console.error(error);
+        });
+    };
+    UserLoginComponent.prototype.test = function () {
+        console.log("test: " + this.username + " " + this.password);
+    };
+    UserLoginComponent.prototype.changeForm = function () {
+        console.log("changeForm called");
+        this.onChangeForm.emit(true);
+    };
     __decorate([
         core_1.Input('str'), 
         __metadata('design:type', String)
     ], UserLoginComponent.prototype, "someString", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], UserLoginComponent.prototype, "onChangeForm", void 0);
     UserLoginComponent = __decorate([
         core_1.Component({
             selector: "login-component",
-            template: "<label>Username or Email</label><input type=\"text\">"
+            templateUrl: "/app/user/user-login.html"
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [http_1.Http])
     ], UserLoginComponent);
     return UserLoginComponent;
 }());

@@ -13,6 +13,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component'
 import { DataService } from './data.service'
 import { EventService} from './event/event.service'
 import { UserService } from './user/user.service'
+import { CookieService } from "angular2-cookie/core"
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { UserService } from './user/user.service'
   providers: [
     DataService,
     EventService,
-    UserService
+    UserService,
+    CookieService
   ],
   bootstrap: [ AppComponent ]
 })
