@@ -1,4 +1,5 @@
 import { Component } from "@angular/core"
+import { Rest } from "../shared/rest"
 import { Http, Response } from "@angular/http"
 import { DataService } from "../data.service"
 import { EventService } from "../event/event.service"
@@ -23,7 +24,8 @@ export class HomeComponent {
     constructor(private dataService: DataService, 
                 private eventService: EventService, 
                 private http: Http,
-                private cookieService: CookieService) {}
+                private cookieService: CookieService,
+                private rest: Rest) {}
 
     ngOnInit() {
         console.log("Home Component Initialized!")
@@ -40,7 +42,7 @@ export class HomeComponent {
     }
 
     ping() {
-       this.http.get(`http://localhost:3030/ping_`)
+       this.rest.get(`http://localhost:3030/ping`)
                 .subscribe(data => { 
                     console.log(data) 
                 }, error => {

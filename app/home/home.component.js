@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var rest_1 = require("../shared/rest");
 var http_1 = require("@angular/http");
 var data_service_1 = require("../data.service");
 var event_service_1 = require("../event/event.service");
@@ -17,11 +18,12 @@ var user_signup_component_1 = require("../user/user-signup.component");
 var user_login_component_1 = require("../user/user-login.component");
 require("/app/shared/rxjs-operators");
 var HomeComponent = (function () {
-    function HomeComponent(dataService, eventService, http, cookieService) {
+    function HomeComponent(dataService, eventService, http, cookieService, rest) {
         this.dataService = dataService;
         this.eventService = eventService;
         this.http = http;
         this.cookieService = cookieService;
+        this.rest = rest;
         this.myString = "hello";
         this.isNewUser = false;
     }
@@ -36,7 +38,7 @@ var HomeComponent = (function () {
         }, function (error) { console.error(error); });
     };
     HomeComponent.prototype.ping = function () {
-        this.http.get("http://localhost:3030/ping_")
+        this.rest.get("http://localhost:3030/ping")
             .subscribe(function (data) {
             console.log(data);
         }, function (error) {
@@ -53,7 +55,7 @@ var HomeComponent = (function () {
             templateUrl: "/app/home/home.html",
             directives: [user_signup_component_1.UserSignupComponent, user_login_component_1.UserLoginComponent]
         }), 
-        __metadata('design:paramtypes', [data_service_1.DataService, event_service_1.EventService, http_1.Http, core_2.CookieService])
+        __metadata('design:paramtypes', [data_service_1.DataService, event_service_1.EventService, http_1.Http, core_2.CookieService, rest_1.Rest])
     ], HomeComponent);
     return HomeComponent;
 }());

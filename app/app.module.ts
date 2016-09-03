@@ -14,6 +14,7 @@ import { DataService } from './data.service'
 import { EventService} from './event/event.service'
 import { UserService } from './user/user.service'
 import { CookieService } from "angular2-cookie/core"
+import { Rest } from "./shared/rest"
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { CookieService } from "angular2-cookie/core"
     DataService,
     EventService,
     UserService,
-    CookieService
+    CookieService,
+    Rest
   ],
   bootstrap: [ AppComponent ]
 })

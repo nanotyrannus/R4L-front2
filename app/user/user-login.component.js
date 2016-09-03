@@ -10,21 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
-var config_1 = require("../shared/config");
+var rest_1 = require("../shared/rest");
 require("/app/shared/rxjs-operators");
 var UserLoginComponent = (function () {
-    function UserLoginComponent(http) {
+    function UserLoginComponent(http, rest) {
         this.http = http;
+        this.rest = rest;
         this.onChangeForm = new core_1.EventEmitter();
     }
     UserLoginComponent.prototype.login = function () {
-        var requestOptions = new http_1.RequestOptions({
-            "withCredentials": true
-        });
-        this.http.post(config_1.baseUrl + "/user/login", {
+        this.rest.post("/user/login", {
             "username": this.username,
             "password": this.password
-        }, requestOptions).subscribe(function (data) {
+        }, null).subscribe(function (data) {
             console.log(data.json());
         }, function (error) {
             console.error(error);
@@ -50,7 +48,7 @@ var UserLoginComponent = (function () {
             selector: "login-component",
             templateUrl: "/app/user/user-login.html"
         }), 
-        __metadata('design:paramtypes', [http_1.Http])
+        __metadata('design:paramtypes', [http_1.Http, rest_1.Rest])
     ], UserLoginComponent);
     return UserLoginComponent;
 }());

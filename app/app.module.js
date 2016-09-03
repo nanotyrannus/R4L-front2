@@ -22,6 +22,7 @@ var data_service_1 = require('./data.service');
 var event_service_1 = require('./event/event.service');
 var user_service_1 = require('./user/user.service');
 var core_2 = require("angular2-cookie/core");
+var rest_1 = require("./shared/rest");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -44,7 +45,8 @@ var AppModule = (function () {
                 data_service_1.DataService,
                 event_service_1.EventService,
                 user_service_1.UserService,
-                core_2.CookieService
+                core_2.CookieService,
+                rest_1.Rest
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 

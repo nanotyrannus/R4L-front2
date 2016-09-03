@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core"
 import { Observable }     from 'rxjs/Observable'
 import { Http, Response, RequestOptions } from "@angular/http"
+import { Rest } from "../shared/rest"
 import { baseUrl } from "../shared/config"
 import "/app/shared/rxjs-operators"
 
@@ -14,17 +15,13 @@ export class UserLoginComponent {
     private username: string
     private password: string
 
-    public constructor(public http: Http) { }
+    public constructor(public http: Http, private rest: Rest) { }
 
     public login() {
-        var requestOptions = new RequestOptions({
-            "withCredentials": true
-        })
-        this.http.post(`${baseUrl}/user/login`, {
+        this.rest.post(`/user/login`, {
             "username": this.username,
             "password": this.password
-        }, requestOptions
-        ).subscribe(data => {
+        }, null).subscribe(data => {
             console.log(data.json())
         }, error => {
             console.error(error)

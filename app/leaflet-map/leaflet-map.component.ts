@@ -1,4 +1,4 @@
-/// <reference path="/home/ryan/Development/Angular2-Examples/leaflet/typings/globals/leaflet/index.d.ts" />
+
 import { Component, OnInit } from "@angular/core"
 import * as L from "leaflet"
 
