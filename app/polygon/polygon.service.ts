@@ -1,32 +1,140 @@
 import { Injectable } from "@angular/core"
+import { Router } from "@angular/router"
 import { Http, Response } from "@angular/http"
 import { Observable }     from 'rxjs/Observable';
 import { LeafletMapComponent } from "../leaflet-map/leaflet-map.component"
+import { EventService } from "../event/event.service"
+import { UserService } from "../user/user.service"
 import "/app/shared/rxjs-operators"
+import { Rest } from "../shared/rest"
+
+class MetaPolygon {
+    public centroid: Centroid
+    public id: number
+}
+
+class Centroid {
+    public lat: number
+    public lng: number
+}
+
+class Polygon {
+    public type: string
+    public id: number
+    public geometry: any
+    public vote: Vote
+}
+
+enum Vote {
+    damage,
+    no_damage,
+    unsure,
+    not_evaluated
+}
 
 @Injectable()
 export class PolygonService {
     private eventId: number
-    private polygonList: any
-    private polygons: any[]
+    private centroidList: MetaPolygon[]
+    private polygons: Map<number, Polygon>
     private leafletMapComponent: LeafletMapComponent
 
-    constructor() {}
+    constructor(
+        private rest: Rest,
+        private eventService: EventService,
+        private userService: UserService,
+        private router: Router) { }
 
-    public start(eventId: number) {
-
+    public start(): Observable<Response> {
+        try {
+            var eventId = this.eventService.currentEvent.id
+            if (this.eventId !== eventId) {
+                this.centroidList = null
+                this.polygons = new Map<number, Polygon>()
+                this.eventId = eventId
+                return this.getPolygonList(this.eventId)
+            } else {
+                console.log(`polygon.service.start() called. same event.`)
+                return null
+            }
+        } catch (e) {
+            console.error(e)
+            this.router.navigate(['/events'])
+        }
     }
 
-    public getPolygonList(eventId: number) {
+    private getPolygonList(eventId: number) {
+        if (!eventId) {
+            throw new Error(`Not a valid event ID: ${eventId}`)
+        }
         /**
          * 1. Get list of polygons, not concrete
          * 2. if this.eventId === null, initialize it with eventId
          * 3. if this.eventId !== eventId, replace polygonList with new value and destroy polygons 
          */
+        var observable = this.rest.get(`/event/${this.eventId}/list`)
+        observable.subscribe(
+            data => {
+                var response = data.json()
+                this.centroidList = response.map(function mapper(elm) {
+                    var polygonMetaData = {
+                        'centroid': {
+                            'lng': elm.lng,
+                            'lat': elm.lat
+                        },
+                        'id': elm.id
+                    }
+                    return polygonMetaData
+                })
+                console.log("polygonlist ", this.centroidList)
+            },
+            error => { console.error(error) }
+        )
+        return observable
     }
 
     public getInitialPolygon() {
+        var centroid = this.centroidList[Math.floor(Math.random() * this.centroidList.length)].centroid
+        console.log("getInitialPolygon called", centroid)
+        return [centroid.lat, centroid.lng]
+    }
 
+    public scanArea(bounds: any): void {
+        console.time("scan")
+        let visible = this.centroidList.filter(function (elm) {
+            if (elm.centroid.lat <= bounds.lat_max
+                && elm.centroid.lat >= bounds.lat_min
+                && elm.centroid.lng <= bounds.lon_max
+                && elm.centroid.lng >= bounds.lon_min) {
+                return true
+            } else {
+                return false
+            }
+        }).map(centroid => {
+            return centroid.id
+        })
+        console.timeEnd("scan")
+        // visible.forEach(function forEach(elm){
+
+        // })
+        let idsCached = visible.filter(id => {
+            if (this.polygons.get(id) !== null) {
+                return true
+            } else {
+                return false
+            }
+        })
+        this.clearPolygons()
+        this.renderPolygons(idsCached)
+        let idsToFetch = visible.filter((id) => {
+            if (this.polygons.has(id)) {
+                return false
+            } else {
+                this.polygons.set(id, null)
+                return true
+            }
+        })
+        this.getPolygons(idsToFetch)
     }
 
     public getPolygons(polygonIds: number[]): any[] {
@@ -36,6 +144,34 @@ export class PolygonService {
          * 2. Get initial polygon. Should this come with the list at the same time? probably
          * 3. 
          */
+        this.rest.post(`/user/${this.userService.username}/event/${this.eventService.currentEvent.id}/polygon/${polygonIds.join(",")}`)
+            .subscribe(data => {
+                let body = data.json()
+                let polygons = body.polygons
+                if (polygons && polygons.length > 0) {
+                    polygons.forEach((polygon) => {
+                        if (this.polygons.has(polygon.id) && this.polygons.get(polygon.id) === null) {
+                            this.polygons.set(polygon.id, { 
+                                'type' : 'Feature',
+                                'geometry' : JSON.parse(polygon.geometry_json),
+                                'id' : polygon.id,
+                                'vote' : polygon.vote
+                            })
+                            console.log({ 
+                                'type' : 'Feature',
+                                'geometry' : JSON.parse(polygon.geometry_json),
+                                'id' : polygon.id,
+                                'vote' : polygon.vote
+                            })
+                        } else {
+                            console.warn(`Duplicate polygon`)
+                        }
+                    })
+                    this.renderPolygons(polygonIds)
+                }
+            }, error => {
+
+            })
         return null
     }
 
@@ -45,5 +181,19 @@ export class PolygonService {
 
     public subscribe(leafletMapComponent: LeafletMapComponent) {
         this.leafletMapComponent = leafletMapComponent
+    }
+
+    private renderPolygons(ids: number[]): void {
+        var polygons = new Array()
+        ids.forEach(id => {
+            if (this.polygons.get(id)) {
+                polygons.push(this.polygons.get(id))
+            }
+        })
+        this.leafletMapComponent.renderPolygons(polygons)
+    }
+
+    private clearPolygons(): void {
+        this.leafletMapComponent.clearPolygons()
     }
 }

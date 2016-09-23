@@ -1,7 +1,9 @@
 import { Http, Response } from "@angular/http"
 import { Component, EventEmitter, Output } from "@angular/core"
 import { Observable } from "rxjs/Observable"
-import { baseUrl } from "../shared/config"
+import { Rest } from "../shared/rest"
+import { UserService } from "../user/user.service"
+import { CookieService } from "angular2-cookie/core"
 
 @Component({
     "selector" : "signup-component",
@@ -15,25 +17,13 @@ export class UserSignupComponent {
     private email: string
     private password: string
 
-    public constructor(public http: Http) {}
+    public constructor(private userService: UserService, private rest: Rest, private cookieService: CookieService) {}
 
     /**
      * Requests user creation from server.
      */ 
     public signup(): void {
-        let observable: Observable<Response> = this.http.post(`${ baseUrl }/user/create`, {
-            "username" : this.username,
-            "password" : this.password,
-            "email" : this.email,
-            "first_name" : this.firstName,
-            "last_name" : this.lastName
-        })
-        
-        observable.subscribe(data => {
-            console.log(data)
-        }, error => {
-            console.error(error)
-        })
+        this.userService.signup(this.username, this.password, this.email, this.firstName, this.lastName)
     }
 
     /**

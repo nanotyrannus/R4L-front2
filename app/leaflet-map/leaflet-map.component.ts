@@ -1,97 +1,8 @@
 
 import { Component, OnInit } from "@angular/core"
+import { EventService } from "../event/event.service"
+import { PolygonService } from "../polygon/polygon.service"
 import * as L from "leaflet"
-
-var o = {
-            "properties": {
-                "name": 50,
-                "boundingBox": [
-                    85.45406860400004,
-                    85.45573635100004,
-                    27.52428954700002,
-                    27.52484546200003
-                ],
-                "centroid": {
-                    "lng": 85.45490247750004,
-                    "lat": 27.524567504500027
-                }
-            },
-            "type": "Feature",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [
-                            85.45545839300007,
-                            27.52484546200003
-                        ],
-                        [
-                            85.45518043500005,
-                            27.52484546200003
-                        ],
-                        [
-                            85.45490247700008,
-                            27.52484546200003
-                        ],
-                        [
-                            85.45462452000004,
-                            27.52484546200003
-                        ],
-                        [
-                            85.45406860400004,
-                            27.52484546200003
-                        ],
-                        [
-                            85.45406860400004,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45462452000004,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45490247700008,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45518043500005,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45518043500005,
-                            27.5242248954700002
-                        ],
-                        [
-                            85.45545839300007,
-                            27.52428954700002
-                        ],
-                        [
-                            85.45573635100004,
-                            27.52428954700002
-                        ],
-                        [
-                            85.45573635100004,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45545839300007,
-                            27.52456750400006
-                        ],
-                        [
-                            85.45545839300007,
-                            27.52484546200003
-                        ]
-                    ]
-                ],
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "EPSG:4326"
-                    }
-                }
-            },
-            "id": "50"
-        }
 
 @Component({
     selector: "my-map",
@@ -104,41 +15,88 @@ var o = {
 
 export class LeafletMapComponent implements OnInit {
     private leafletMap: any
+    private geoJsonLayerGroup: any
+    private timeoutId: number
 
-    constructor() {}
+    constructor(private polygonService: PolygonService, private eventService: EventService) { }
 
     ngOnInit() {
         /**
          * Since this comp is destroyed when routed, call PolygonService.start on init
          * start() should only poll the server if this component corresponds to a different event than before
          */
-        this.leafletMap = L.map("map").setView([34.198649, -118.174585], 15)
+
+        this.leafletMap = L.map("map", {'minZoom' : 10}).setView([0, 0])
+        this.polygonService.subscribe(this)
         this.leafletMap.on("layeradd", (event) => {
             if (event.layer.feature) {
-                console.log(event.layer._leaflet_id)
             }
         })
+        this.geoJsonLayerGroup = L.geoJson()
+        this.geoJsonLayerGroup.addTo(this.leafletMap)
+
+
+        this.leafletMap.on("moveend", () => {
+            // console.log(`Leaflet map moved! Bounds:`, this.getBounds())
+            this.polygonService.scanArea(this.getBounds())
+        })
+
+        this.leafletMap.on("drag", () => {
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId)
+            }
+            this.timeoutId = window.setTimeout(() => {
+                this.polygonService.scanArea(this.getBounds())
+            }, 100)
+        })
+
+        var observer = this.polygonService.start()
+        if (observer) {
+            observer.subscribe(data => {
+                console.warn(`async'ly set view`)
+                this.leafletMap.setView(this.polygonService.getInitialPolygon(), 15)
+                this.leafletMap.setMaxBounds(this.eventService.currentEvent.boundingBox)
+                this.initMapLayer()
+            })
+        } else {
+            console.warn(`sync'ly set view`)
+            this.leafletMap.setView(this.polygonService.getInitialPolygon(), 15)
+            this.initMapLayer()
+        }
+    }
+
+    notify() {
+        /**
+         * should be called by polygonservice when new data is recieved
+         */
+    }
+
+    public renderPolygons(polygons: any[]) {
+        polygons.forEach(polygon => {
+            this.geoJsonLayerGroup.addData(polygon)
+        })
+    }
+
+    public clearPolygons(): void {
+        this.geoJsonLayerGroup.clearLayers()
+    }
+
+    private initMapLayer(): void {
         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             maxZoom: 18,
             id: 'your.mapbox.project.id',
             accessToken: 'pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw'
         }).addTo(this.leafletMap);
-        // var circle = L.circle([34.198, -118.174], 500)
-        // circle.addTo(this.leafletMap)
-
-        var geoJsonGroup = L.geoJson(o)
-        geoJsonGroup.addTo(this.leafletMap)
-        this.leafletMap.setView([27.524567504500027, 85.45490247750004])
-        setTimeout(()=>{
-            geoJsonGroup.removeLayer("" + 24)
-            // geoJsonGroup.addTo(this.leafletMap)
-        }, 2000)
     }
-    
-    notify() {
-        /**
-         * should be called by polygonservice when new data is recieved
-         */
+
+    private getBounds(): any {
+        var b = this.leafletMap.getBounds()
+        return {
+            "lat_max": b._northEast.lat,
+            "lon_max": b._northEast.lng,
+            "lat_min": b._southWest.lat,
+            "lon_min": b._southWest.lng
+        }
     }
 }

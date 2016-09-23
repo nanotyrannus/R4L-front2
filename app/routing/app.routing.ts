@@ -2,11 +2,13 @@ import { Routes, RouterModule } from '@angular/router'
 import { HomeComponent } from '../home/home.component'
 import { LeafletMapComponent } from '../leaflet-map/leaflet-map.component'
 import { EventComponent } from '../event/event.component'
+import { AdminComponent } from '../user/admin.component'
+import { LoggedInGuard } from "./logged-in.guard"
 
 const appRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'map',
@@ -14,7 +16,13 @@ const appRoutes: Routes = [
   },
   {
     path: 'events',
-    component: EventComponent
+    component: EventComponent,
+    canActivate: [LoggedInGuard]
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [LoggedInGuard]
   }
 ];
 
