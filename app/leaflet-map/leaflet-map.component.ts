@@ -29,8 +29,9 @@ export class LeafletMapComponent implements OnInit {
         this.leafletMap = L.map("map", {'minZoom' : 10}).setView([0, 0])
         this.polygonService.subscribe(this)
         this.leafletMap.on("layeradd", (event) => {
-            if (event.layer.feature) {
-            }
+            // if (event.layer.feature) {
+            //     console.log("layeradd event", event.layer.feature.vote)
+            // }
         })
         this.geoJsonLayerGroup = L.geoJson()
         this.geoJsonLayerGroup.addTo(this.leafletMap)
@@ -41,13 +42,24 @@ export class LeafletMapComponent implements OnInit {
             this.polygonService.scanArea(this.getBounds())
         })
 
+        var dragTick = 0
         this.leafletMap.on("drag", () => {
-            if (this.timeoutId) {
-                clearTimeout(this.timeoutId)
-            }
-            this.timeoutId = window.setTimeout(() => {
+            dragTick++
+            if (dragTick > 20) {
                 this.polygonService.scanArea(this.getBounds())
-            }, 100)
+                dragTick = 0
+            }
+            // if (this.timeoutId) {
+            //     clearTimeout(this.timeoutId)
+            // }
+            // this.timeoutId = window.setTimeout(() => {
+            //     this.polygonService.scanArea(this.getBounds())
+            // }, 50)
+        })
+
+        this.leafletMap.on("dragend", ()=> {
+            this.polygonService.scanArea(this.getBounds())
+            dragTick = 0
         })
 
         var observer = this.polygonService.start()
