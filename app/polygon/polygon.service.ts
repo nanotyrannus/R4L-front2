@@ -11,6 +11,7 @@ import { Rest } from "../shared/rest"
 class MetaPolygon {
     public centroid: Centroid
     public id: number
+    public voted: boolean
 }
 
 class Centroid {
@@ -35,8 +36,8 @@ enum Vote {
 @Injectable()
 export class PolygonService {
     private eventId: number
-    private centroidList: MetaPolygon[]
-    private polygons: Map<number, Polygon>
+    private _centroidList: MetaPolygon[] //Metadata of polygon
+    private polygons: Map<number, Polygon> //Full polygon object
     private leafletMapComponent: LeafletMapComponent
 
     constructor(
@@ -49,7 +50,7 @@ export class PolygonService {
         try {
             var eventId = this.eventService.currentEvent.id
             if (this.eventId !== eventId) {
-                this.centroidList = null
+                this._centroidList = null
                 this.polygons = new Map<number, Polygon>()
                 this.eventId = eventId
                 return this.getPolygonList(this.eventId)
@@ -76,17 +77,18 @@ export class PolygonService {
         observable.subscribe(
             data => {
                 var response = data.json()
-                this.centroidList = response.map(function mapper(elm) {
+                this._centroidList = response.map(function mapper(elm) {
                     var polygonMetaData = {
                         'centroid': {
                             'lng': elm.lng,
                             'lat': elm.lat
                         },
-                        'id': elm.id
+                        'id': elm.id,
+                        "vote" : elm.vote
                     }
                     return polygonMetaData
                 })
-                console.log("polygonlist ", this.centroidList)
+                console.log("polygonlist ", this._centroidList)
             },
             error => { console.error(error) }
         )
@@ -94,14 +96,21 @@ export class PolygonService {
     }
 
     public getInitialPolygon() {
-        var centroid = this.centroidList[Math.floor(Math.random() * this.centroidList.length)].centroid
+        /**
+         * Return random polygon with no vote. Otherwise return first polygon.
+         */
+        var unvotedList = this._centroidList.filter(metaPolygon => !metaPolygon.voted)
+        var centroid = this._centroidList[0].centroid
+        if (unvotedList.length > 0) {
+            centroid = unvotedList[Math.floor(Math.random() * this._centroidList.length)].centroid
+        }
         console.log("getInitialPolygon called", centroid)
         return [centroid.lat, centroid.lng]
     }
 
     public scanArea(bounds: any): void {
         console.time("scan")
-        let visible = this.centroidList.filter(function (elm) {
+        let visible = this._centroidList.filter(function (elm) {
             if (elm.centroid.lat <= bounds.lat_max
                 && elm.centroid.lat >= bounds.lat_min
                 && elm.centroid.lng <= bounds.lon_max
@@ -157,12 +166,12 @@ export class PolygonService {
                                 'id' : polygon.id,
                                 'vote' : polygon.vote
                             })
-                            console.log({ 
-                                'type' : 'Feature',
-                                'geometry' : JSON.parse(polygon.geometry_json),
-                                'id' : polygon.id,
-                                'vote' : polygon.vote
-                            })
+                            // console.log({ 
+                            //     'type' : 'Feature',
+                            //     'geometry' : JSON.parse(polygon.geometry_json),
+                            //     'id' : polygon.id,
+                            //     'vote' : polygon.vote
+                            // })
                         } else {
                             console.warn(`Duplicate polygon`)
                         }
@@ -175,8 +184,20 @@ export class PolygonService {
         return null
     }
 
-    public setPolygonScore() {
+    public refreshPolygon(id: number): void { 
+        /**
+         * Force fetching of polygon when data needs to be updated.
+         */
+        this.rest.post(`/user/${this.userService.username}/event/${this.eventService.currentEvent.id}/polygon/${ id }`)
+            .subscribe(data => {
+                //TODO
+            })
+    }
 
+    public submitVote(value: Vote, id: number) {
+        this.rest.post(`/event/${ this.eventId }/polygon/${ id }`, { 'username' : this.userService.username, 'vote' : value}).subscribe(data => {
+            console.log(`vote result`, data.json())
+        })
     }
 
     public subscribe(leafletMapComponent: LeafletMapComponent) {
@@ -195,5 +216,9 @@ export class PolygonService {
 
     private clearPolygons(): void {
         this.leafletMapComponent.clearPolygons()
+    }
+
+    public get centroidList(): MetaPolygon[] {
+        return this._centroidList
     }
 }

@@ -1,0 +1,13 @@
+<ol class="breadcrumb">
+    <li><a routerLink="/events">Events</a></li>
+    <li>{{ eventName }}</li>
+</ol>
+<div id="map" style="height: 75%;"></div>
+<div (window:keydown)="onKeyPress($event)"  id="vote-interface" style="height: 15%;">
+    <span>{{ selectedPolygon?.id }}, {{ selectedPolygon?.vote }}</span>
+    <button (click)="submitVote('damage')">DAMAGED</button>
+    <button (click)="submitVote('no_damage')">NOT DAMAGED</button>
+    <button (click)="submitVote('unsure')">UNSURE</button>
+    <button (click)="gotoNext()">NEXT</button>
+    <button>VIEW</button>
+</div>

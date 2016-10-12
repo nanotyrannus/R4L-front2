@@ -25,6 +25,12 @@ export class EventService {
 
     set currentEvent(value: Event) {
         console.log(`currentEvent set to ${ value }`)
+        let bbox = value.boundingBox
+        let margin = 0.01
+        bbox[0][0] -= margin
+        bbox[0][1] -= margin
+        bbox[1][0] += margin
+        bbox[1][1] += margin
         this._currentEvent = value
     }
 

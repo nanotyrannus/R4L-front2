@@ -1,10 +1,10 @@
 <div>
     <login-component *ngIf="!isNewUser" [str]="myString" (onChangeForm)="onChangeForm($event)"></login-component>
     <signup-component *ngIf="isNewUser" (onChangeForm)="onChangeForm($event)"></signup-component>
-    <input type="text" [(ngModel)]="query"><button (click)="getData()">GO</button>
+    <!--<input type="text" [(ngModel)]="query"><button (click)="getData()">GO</button>
     <pre>
         <code>{{ response }}</code>
     </pre>
     <button (click)="ping()">PING</button>
-    <button (click)="securedPing()">PING_</button>
+    <button (click)="securedPing()">PING_</button>-->
 </div>

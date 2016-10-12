@@ -8,22 +8,28 @@ import "/app/shared/rxjs-operators"
 
 @Component({
     selector: "login-component",
-    templateUrl: "/app/user/user-login.html"
+    templateUrl: "/app/user/user-login.html",
+    styleUrls: ["/app/user/user.css"]
 })
 export class UserLoginComponent {
     @Input('str') public someString: string
     @Output() public onChangeForm = new EventEmitter<boolean>()
     private username: string
     private password: string
+    private showLoginError: boolean = false
 
-    public constructor(private userService: UserService, private rest: Rest, private cookieService: CookieService) { }
+    public constructor(private userService: UserService, private rest: Rest, private cookieService: CookieService) { 
+        this.userService.loginSubject.subscribe(data => {
+            this.showLoginError = data
+        })
+    }
 
     ngOnInit() {
-        console.log(`The string: ${ this.someString }`)
+        console.log(`The string: ${this.someString}`)
     }
 
     public login() {
-        this.userService.login(this.username, this.password)
+            this.userService.login(this.username, this.password)
     }
 
     public test() {
