@@ -28,7 +28,7 @@ export class EventComponent {
             data => {
                 let eventResponse = data.json()
                 eventResponse.forEach((event) => {
-
+                    console.log(`${event.name} has ${ event.site_count } sites`)
                     this.events.push(new Event(event.name, event.description, event.thumbnail, event.site_count, event.id, [[event.south, event.west], [event.north, event.east]]))
                 })
                 // console.log(events.forEach)

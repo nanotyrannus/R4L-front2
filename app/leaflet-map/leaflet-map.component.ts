@@ -26,6 +26,8 @@ export class LeafletMapComponent implements OnInit {
     private keyState: any
     private selectedPolygon: any = null
     private nextPolygonId: number
+    private satelliteLayer: any
+    private terrainLayer: any
 
     constructor(private polygonService: PolygonService, private eventService: EventService) {
         this.keyState = {}
@@ -134,29 +136,17 @@ export class LeafletMapComponent implements OnInit {
     }
 
     private initMapLayer(): void {
-        var satelliteLayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
+        this.satelliteLayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             maxZoom: 19,
             id: 'your.mapbox.project.id',
             accessToken: 'pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw'
         })
-        var terrainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/nanotyrannus/citosvy3f00082il18xi6kuw9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw', {
+        this.terrainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/nanotyrannus/citosvy3f00082il18xi6kuw9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw', {
             maxZoon: 19,
             id: 'your.mapbox.project.id'
         })
-        satelliteLayer.addTo(this.leafletMap)
-        document.addEventListener('keydown', e => {
-            if (e.keyCode === 75) {
-                this.leafletMap.removeLayer(satelliteLayer)
-                this.leafletMap.addLayer(terrainLayer)
-            }
-        })
-        document.addEventListener('keyup', e => {
-            if (e.keyCode === 75) {
-                this.leafletMap.removeLayer(terrainLayer)
-                this.leafletMap.addLayer(satelliteLayer)
-            }
-        })
+        this.satelliteLayer.addTo(this.leafletMap)
     }
 
     private getBounds(): any {
@@ -180,27 +170,43 @@ export class LeafletMapComponent implements OnInit {
         }
         this.nextPolygonId = nextId
         this.leafletMap.setView(this.polygonService.centroidList[nextId].centroid)
-        console.log(`Next: ${ this.selectedPolygon.id }`)
+    }
+
+    private gotoPrev(): void {
+        //TODO
     }
 
     private submitVote(value: Vote): void {
         this.polygonService.submitVote(value, this.selectedPolygon.id)
     }
 
-    private onKeyPress(event: any, value: string):void {
-        console.log(`key press detected ${ value }`, event)
+    private onKeyPress(event: any, value: string): void {
+        if (event.keyCode === 78) {
+            this.gotoNext()
+        }
+        else if (event.keyCode === 75) {
+                this.leafletMap.removeLayer(this.satelliteLayer)
+                this.leafletMap.addLayer(this.terrainLayer)
+        }
+    }
+
+    private onKeyUp(event: any, value: string): void {
+        console.log("keyup")
+                    if (event.keyCode === 75) {
+                this.leafletMap.removeLayer(this.terrainLayer)
+                this.leafletMap.addLayer(this.satelliteLayer)
+            }
     }
 }
 
 var styles = {
     'not_evaluated' : {
         'color' : "#ff3f34",
-        'fillOpacity' : 0,
-        'opacity' : 1
+        'fillOpacity' : 0.5
     },
     'damage' : {
         'color' : "#ed0a3f",
-        'fillOpacity' : 0.5
+        'fillOpacity' : 0.9
     },
     'no_damage' : {
         'color' : "#44f1bd"
