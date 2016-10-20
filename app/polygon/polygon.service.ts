@@ -84,7 +84,7 @@ export class PolygonService {
                             'lat': elm.lat
                         },
                         'id': elm.id,
-                        "vote" : elm.vote
+                        "vote": elm.vote
                     }
                     return polygonMetaData
                 })
@@ -160,11 +160,11 @@ export class PolygonService {
                 if (polygons && polygons.length > 0) {
                     polygons.forEach((polygon) => {
                         if (this.polygons.has(polygon.id) && this.polygons.get(polygon.id) === null) {
-                            this.polygons.set(polygon.id, { 
-                                'type' : 'Feature',
-                                'geometry' : JSON.parse(polygon.geometry_json),
-                                'id' : polygon.id,
-                                'vote' : polygon.vote
+                            this.polygons.set(polygon.id, {
+                                'type': 'Feature',
+                                'geometry': JSON.parse(polygon.geometry_json),
+                                'id': polygon.id,
+                                'vote': polygon.vote
                             })
                             // console.log({ 
                             //     'type' : 'Feature',
@@ -184,20 +184,28 @@ export class PolygonService {
         return null
     }
 
-    public refreshPolygon(id: number): void { 
+    public refreshPolygon(id: number): void {
         /**
          * Force fetching of polygon when data needs to be updated.
          */
-        this.rest.post(`/user/${this.userService.username}/event/${this.eventService.currentEvent.id}/polygon/${ id }`)
+        this.rest.post(`/user/${this.userService.username}/event/${this.eventService.currentEvent.id}/polygon/${id}`)
             .subscribe(data => {
                 //TODO
+                var body = data.json()
+                var polygon = body.polygons[0]
+                this.polygons.set(polygon.id, {
+                    'type': 'Feature',
+                    'geometry': JSON.parse(polygon.geometry_json),
+                    'id': polygon.id,
+                    'vote': polygon.vote
+                })
+                this.scanArea(this.leafletMapComponent.getBounds())
+                console.log(`from refresh`, polygon)
             })
     }
 
-    public submitVote(value: Vote, id: number) {
-        this.rest.post(`/event/${ this.eventId }/polygon/${ id }`, { 'username' : this.userService.username, 'vote' : value}).subscribe(data => {
-            console.log(`vote result`, data.json())
-        })
+    public submitVote(value: Vote, id: number): Observable<Response> {
+        return this.rest.post(`/event/${this.eventId}/polygon/${id}`, { 'username': this.userService.username, 'vote': value })
     }
 
     public subscribe(leafletMapComponent: LeafletMapComponent) {

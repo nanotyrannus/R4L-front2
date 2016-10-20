@@ -149,7 +149,7 @@ export class LeafletMapComponent implements OnInit {
         this.satelliteLayer.addTo(this.leafletMap)
     }
 
-    private getBounds(): any {
+    public getBounds(): any {
         var b = this.leafletMap.getBounds()
         return {
             "lat_max": b._northEast.lat,
@@ -177,7 +177,11 @@ export class LeafletMapComponent implements OnInit {
     }
 
     private submitVote(value: Vote): void {
-        this.polygonService.submitVote(value, this.selectedPolygon.id)
+        this.polygonService.submitVote(value, this.selectedPolygon.id).subscribe(data => {
+            var body = data.json()
+            this.polygonService.refreshPolygon(body.polygon_id)
+            this.polygonService.scanArea(this.getBounds())
+        })
     }
 
     private onKeyPress(event: any, value: string): void {

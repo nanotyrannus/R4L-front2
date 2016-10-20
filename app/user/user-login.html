@@ -2,7 +2,13 @@
     <form>
         <div class="input-group">
             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-            <input type="text" [(ngModel)]="username" name="username" placeholder="Username or email" class="form-control">
+            <input type="text" 
+                   (keyup.enter)="login()" 
+                   [(ngModel)]="username" 
+                   name="username" 
+                   placeholder="Username or email" 
+                   tabindex=1 
+                   class="form-control">
         </div>
 
         <div class="input-group">
@@ -10,12 +16,18 @@
                 <span *ngIf="!showLoginError" class="glyphicon glyphicon-minus-sign"></span>
                 <span *ngIf="showLoginError" class="glyphicon glyphicon-remove-sign" style="color: red;"></span>
             </span>
-            <input type="password" (keyup.enter)="login()" [(ngModel)]="password" name="password" placeholder="Password" class="form-control">
+            <input type="password" 
+                   (keyup.enter)="login()" 
+                   [(ngModel)]="password" 
+                   name="password" 
+                   placeholder="Password" 
+                   tabindex=2 
+                   class="form-control">
         </div>
     </form>
     <div class="error-message">
         <div *ngIf="showLoginError">Wrong username or password!</div>
     </div>
-    <button (click)="login()">LOGIN</button>
+    <button class="btn btn-default" (click)="login()">LOGIN</button>
     <a href="javascript:void(0)" (click)="changeForm()">New user?</a>
 </div>
