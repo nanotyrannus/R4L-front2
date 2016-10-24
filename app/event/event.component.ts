@@ -18,6 +18,7 @@ import { UserService } from "../user/user.service"
 export class EventComponent {
     query: string
     events: Event[]
+    username: string
 
     public constructor(private eventService: EventService, private userService: UserService, private router: Router) {
         this.events = new Array<Event>()
@@ -37,6 +38,7 @@ export class EventComponent {
                 console.error(error)
             }
         )
+        this.username = this.userService.username
     }
 
     private addEvent(event: Event): void {
@@ -57,6 +59,10 @@ export class EventComponent {
         this.eventService.currentEvent = value
         console.log(`boundingbox`, value.boundingBox)
         this.router.navigate(['/map'])
+    }
+
+    private logout(): void {
+        this.userService.logout()
     }
 }
 

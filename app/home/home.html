@@ -1,11 +1,16 @@
-<div class="container">
-    <div class="row">
-        <div class="col-sm-8">
-        <login-component *ngIf="!isNewUser" [str]="myString" (onChangeForm)="onChangeForm($event)"></login-component>
-        <signup-component *ngIf="isNewUser" (onChangeForm)="onChangeForm($event)"></signup-component>
-        </div>
+<div class="header">
+	<div class="title">
+		Radar for Life
     </div>
-    <!--<input type="text" [(ngModel)]="query"><button (click)="getData()">GO</button>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="login-container col-sm-8">
+			<login-component *ngIf="!isNewUser" [str]="myString" (onChangeForm)="onChangeForm($event)"></login-component>
+			<signup-component *ngIf="isNewUser" (onChangeForm)="onChangeForm($event)"></signup-component>
+		</div>
+	</div>
+	<!--<input type="text" [(ngModel)]="query"><button (click)="getData()">GO</button>
     <pre>
         <code>{{ response }}</code>
     </pre>

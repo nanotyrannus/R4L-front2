@@ -1,13 +1,59 @@
-<ol class="breadcrumb">
-    <li><a routerLink="/events">Events</a></li>
-    <li>{{ eventName }}</li>
-</ol>
-<div id="map" style="height: 75%;"></div>
-<div (window:keydown)="onKeyPress($event)"  (window:keyup)="onKeyUp($event)" id="vote-interface" style="height: 15%;">
-    <span>{{ selectedPolygon?.id }}, {{ selectedPolygon?.vote }}</span>
-    <button (click)="submitVote('damage')">DAMAGED</button>
-    <button (click)="submitVote('no_damage')">NOT DAMAGED</button>
-    <button (click)="submitVote('unsure')">UNSURE</button>
-    <button (click)="gotoNext()">NEXT</button>
-    <button>VIEW</button>
+<div class="leaflet-map-container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <!--<div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>-->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <ol class="breadcrumb">
+                            <li><a routerLink="/events">Events</a></li>
+                            <li>{{ eventName }}</li>
+                            <li><span>Map</span></li>
+                        </ol>
+                    </li>
+                    <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right hide-on-small">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Hello {{ username }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a routerLink="/admin">Upload Event</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" (click)="logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <div id="map" style="height: 75%; width: 100%;"></div>
+    <div (window:keydown)="onKeyPress($event)" (window:keyup)="onKeyUp($event)" id="vote-interface" class="container">
+        <div class="row">
+        <span class="col-sm-4">{{ selectedPolygon?.id }}, {{ selectedPolygon?.vote }}</span>
+        <div class="btn-group col-sm-8" role="group">
+            <button class="vote-button btn btn-default btn-lg" (click)="submitVote('damage')"><img style="height:100%;"src="/assets/images/damage.png"></button>
+            <button class="vote-button btn btn-default btn-lg" (click)="submitVote('no_damage')"><img style="height:100%;"src="/assets/images/fine.png"></button>
+            <button class="vote-button btn btn-default btn-lg" (click)="submitVote('unsure')">?</button>
+            <button class="vote-button btn btn-default btn-lg" (click)="gotoNext()">
+                <span class="glyphicon glyphicon-arrow-right"></span>
+            </button>
+            <button class="vote-button btn btn-default btn-lg" (mousedown)="renderTerrainLayer()" (mouseup)="renderSatelliteLayer()">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+        </div>
+        </div>
+    </div>
 </div>

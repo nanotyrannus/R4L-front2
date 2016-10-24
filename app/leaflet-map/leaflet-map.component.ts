@@ -2,6 +2,7 @@
 import { Component, OnInit } from "@angular/core"
 import { EventService } from "../event/event.service"
 import { PolygonService } from "../polygon/polygon.service"
+import { UserService } from "../user/user.service"
 import * as L from "leaflet"
 
 enum Vote {
@@ -18,6 +19,7 @@ enum Vote {
 })
 
 export class LeafletMapComponent implements OnInit {
+    private username: string
     private leafletMap: any
     private geoJsonLayerGroup: any
     private timeoutId: number
@@ -29,16 +31,18 @@ export class LeafletMapComponent implements OnInit {
     private satelliteLayer: any
     private terrainLayer: any
 
-    constructor(private polygonService: PolygonService, private eventService: EventService) {
+    constructor(private polygonService: PolygonService, private eventService: EventService, private userService: UserService) {
         this.keyState = {}
     }
 
     ngOnInit() {
+        this.username = this.userService.username
+
         /**
          * Since this comp is destroyed when routed, call PolygonService.start on init
          * start() should only poll the server if this component corresponds to a different event than before
          */
-        this.leafletMap = L.map("map", {'minZoom' : 10}).setView([0, 0])
+        this.leafletMap = L.map("map", { 'minZoom': 10 }).setView([0, 0])
         this.popup = L.popup()
         // var div = document.createElement("div")
         // div.style.width = "100px"
@@ -96,7 +100,7 @@ export class LeafletMapComponent implements OnInit {
             // }, 50)
         })
 
-        this.leafletMap.on("dragend", ()=> {
+        this.leafletMap.on("dragend", () => {
             this.polygonService.scanArea(this.getBounds())
             dragTick = 0
         })
@@ -126,7 +130,7 @@ export class LeafletMapComponent implements OnInit {
 
     public renderPolygons(polygons: any[]) {
         polygons.forEach(polygon => {
-            this.geoJsonLayerGroup.addData(polygon)   
+            this.geoJsonLayerGroup.addData(polygon)
         })
 
     }
@@ -189,53 +193,65 @@ export class LeafletMapComponent implements OnInit {
             this.gotoNext()
         }
         else if (event.keyCode === 75) {
-                this.leafletMap.removeLayer(this.satelliteLayer)
-                this.leafletMap.addLayer(this.terrainLayer)
+            this.renderTerrainLayer()
         }
     }
 
     private onKeyUp(event: any, value: string): void {
         console.log("keyup")
-                    if (event.keyCode === 75) {
-                this.leafletMap.removeLayer(this.terrainLayer)
-                this.leafletMap.addLayer(this.satelliteLayer)
-            }
+        if (event.keyCode === 75) {
+            this.renderSatelliteLayer()
+        }
+    }
+
+    private renderTerrainLayer(): void {
+        this.leafletMap.removeLayer(this.satelliteLayer)
+        this.leafletMap.addLayer(this.terrainLayer)
+    }
+
+    private renderSatelliteLayer(): void {
+        this.leafletMap.removeLayer(this.terrainLayer)
+        this.leafletMap.addLayer(this.satelliteLayer)
+    }
+
+    private logout(): void {
+        this.userService.logout()
     }
 }
 
 var styles = {
-    'not_evaluated' : {
-        'color' : "#ff3f34",
-        'fillOpacity' : 0.5
+    'not_evaluated': {
+        'color': "#ff3f34",
+        'fillOpacity': 0.5
     },
-    'damage' : {
-        'color' : "#ed0a3f",
-        'fillOpacity' : 0.9
+    'damage': {
+        'color': "#ed0a3f",
+        'fillOpacity': 0.9
     },
-    'no_damage' : {
-        'color' : "#44f1bd"
+    'no_damage': {
+        'color': "#44f1bd"
     },
-    'unsure' : {
-        'color' : "#8533fe"
+    'unsure': {
+        'color': "#8533fe"
     },
-    'clicked' : {
-        'fillOpacity' : 0.0
+    'clicked': {
+        'fillOpacity': 0.0
     }
 }
 
 var selectedStyles = {
-    'not_evaluated' : {
-        'color' : "#ff3f34",
-        'fillOpacity' : 0,
-        'opacity' : 1
+    'not_evaluated': {
+        'color': "#ff3f34",
+        'fillOpacity': 0,
+        'opacity': 1
     },
-    'damage' : {
-        'color' : "#ed0a3f"
+    'damage': {
+        'color': "#ed0a3f"
     },
-    'no_damage' : {
-        'color' : ""
+    'no_damage': {
+        'color': ""
     },
-    'unsure' : {
-        'color' : ""
+    'unsure': {
+        'color': ""
     }
 }

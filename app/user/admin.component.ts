@@ -1,5 +1,6 @@
 import { Component } from "@angular/core"
 import { UploadComponent } from "./upload.component"
+import { UserService } from "../user/user.service"
 
 @Component({
     "selector" : "admin-component",
@@ -7,5 +8,4 @@ import { UploadComponent } from "./upload.component"
     "directives" : [UploadComponent]
 })
 export class AdminComponent {
-
 }
