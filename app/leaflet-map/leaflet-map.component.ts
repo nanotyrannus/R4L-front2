@@ -114,7 +114,7 @@ export class LeafletMapComponent implements OnInit {
                 this.eventName = this.eventService.currentEvent.name
                 let init = this.polygonService.getInitialPolygon()
                 this.nextPolygonId = init.id
-                this.leafletMap.setView(init.centroid, 15)
+                this.leafletMap.setView(init.centroid, 17)
                 this.leafletMap.setMaxBounds(this.eventService.currentEvent.boundingBox)
                 this.initMapLayer()
             })
@@ -123,7 +123,7 @@ export class LeafletMapComponent implements OnInit {
             this.eventName = this.eventService.currentEvent.name
             let init = this.polygonService.getInitialPolygon()
             this.nextPolygonId = init.id
-            this.leafletMap.setView(init.centroid, 15)
+            this.leafletMap.setView(init.centroid, 17)
             this.initMapLayer()
         }
     }
