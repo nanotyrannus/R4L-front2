@@ -60,6 +60,8 @@ export class LeafletMapComponent implements OnInit {
                     event.layer.setStyle(styles[feature.vote])
                     event.layer.setStyle(styles.clicked)
                     this.selectedPolygon = feature
+                } else if (feature.id === this.nextPolygonId) {
+                    this.selectedPolygon = feature
                 } else {
                     event.layer.setStyle(styles[feature.vote])
                 }
@@ -106,22 +108,22 @@ export class LeafletMapComponent implements OnInit {
         })
 
         var observer = this.polygonService.start()
-        var initialPolygon = this.polygonService.getInitialPolygon()
-        var initialCentroid = [initialPolygon.centroid.lng, initialCentroid.lat]
         if (observer) {
             observer.subscribe(data => {
                 console.warn(`async'ly set view`)
                 this.eventName = this.eventService.currentEvent.name
-                this.nextPolygonId = initialPolygon.id
-                this.leafletMap.setView(initialCentroid, 15)
+                let init = this.polygonService.getInitialPolygon()
+                this.nextPolygonId = init.id
+                this.leafletMap.setView(init.centroid, 15)
                 this.leafletMap.setMaxBounds(this.eventService.currentEvent.boundingBox)
                 this.initMapLayer()
             })
         } else {
             console.warn(`sync'ly set view`)
             this.eventName = this.eventService.currentEvent.name
-            this.nextPolygonId = initialPolygon.id
-            this.leafletMap.setView(initialCentroid, 15)
+            let init = this.polygonService.getInitialPolygon()
+            this.nextPolygonId = init.id
+            this.leafletMap.setView(init.centroid, 15)
             this.initMapLayer()
         }
     }
