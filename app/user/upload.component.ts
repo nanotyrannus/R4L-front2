@@ -2,10 +2,11 @@ import { Component } from "@angular/core"
 import { Rest } from "../shared/rest"
 import { CookieService } from "angular2-cookie/core"
 import { UserService} from "../user/user.service"
+import { baseUrl } from "../shared/config"
 import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass, NgStyle} from '@angular/common'
 import {FILE_UPLOAD_DIRECTIVES, FileUploader} from '../../node_modules/ng2-file-upload'
 
-const URL = "http://localhost:3030/event"
+const URL = `${ baseUrl }/event`
 
 
 @Component({
