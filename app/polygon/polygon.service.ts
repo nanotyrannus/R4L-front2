@@ -100,12 +100,12 @@ export class PolygonService {
          * Return random polygon with no vote. Otherwise return first polygon.
          */
         var unvotedList = this._centroidList.filter(metaPolygon => !metaPolygon.voted)
-        var centroid = this._centroidList[0].centroid
+        var initialMetaPolygon = this._centroidList[0]
         if (unvotedList.length > 0) {
-            centroid = unvotedList[Math.floor(Math.random() * this._centroidList.length)].centroid
+            initialMetaPolygon = unvotedList[Math.floor(Math.random() * this._centroidList.length)]
         }
-        console.log("getInitialPolygon called", centroid)
-        return [centroid.lat, centroid.lng]
+        console.log("getInitialPolygon called", initialMetaPolygon)
+        return initialMetaPolygon
     }
 
     public scanArea(bounds: any): void {

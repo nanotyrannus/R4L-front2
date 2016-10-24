@@ -106,18 +106,20 @@ export class LeafletMapComponent implements OnInit {
         })
 
         var observer = this.polygonService.start()
+        var initialPolygon = this.polygonService.getInitialPolygon()
+        var initialCentroid = [initialPolygon.centroid.lng, initialCentroid.lat]
         if (observer) {
             observer.subscribe(data => {
                 console.warn(`async'ly set view`)
                 this.eventName = this.eventService.currentEvent.name
-                this.leafletMap.setView(this.polygonService.getInitialPolygon(), 15)
+                this.leafletMap.setView(initialCentroid, 15)
                 this.leafletMap.setMaxBounds(this.eventService.currentEvent.boundingBox)
                 this.initMapLayer()
             })
         } else {
             console.warn(`sync'ly set view`)
             this.eventName = this.eventService.currentEvent.name
-            this.leafletMap.setView(this.polygonService.getInitialPolygon(), 15)
+            this.leafletMap.setView(initialCentroid, 15)
             this.initMapLayer()
         }
     }
