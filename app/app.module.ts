@@ -12,6 +12,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component'
 import { AdminComponent } from './user/admin.component'
 import { UploadComponent } from './user/upload.component'
 import { EventCardComponent } from './event/event-card.component'
+import { EventDetailComponent } from './event/event-detail.component'
 
 import { DataService } from './data.service'
 import { EventService} from './event/event.service'
@@ -34,6 +35,7 @@ import { Rest } from "./shared/rest"
     UserLoginComponent,
     LeafletMapComponent,
     EventComponent,
+    EventDetailComponent,
     AdminComponent,
     UploadComponent
   ],

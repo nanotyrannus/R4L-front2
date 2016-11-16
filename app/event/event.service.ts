@@ -19,8 +19,8 @@ export class EventService {
         return this.rest.get(`/event`)
     }
 
-    public deleteEvent(id: number): Observable<Response> {
-        return this.rest.delete(`/event/${ id }`)
+    public deleteEvent(): Observable<Response> {
+        return this.rest.post(`/event/${ this.currentEvent.id }/delete`)
     }
 
     set currentEvent(value: Event) {
@@ -41,5 +41,15 @@ export class EventService {
             console.log(`Not null: ${ this._currentEvent.id }`)
             return this._currentEvent
         }
+    }
+
+    public setDescription(value: string): Observable<Response> {
+        return this.rest.post(`/event/${ this.currentEvent.id }/description`, {
+            "description" : value
+        })
+    }
+
+    public test() {
+        console.log("test() called")
     }
 }

@@ -40,6 +40,17 @@
     background-color: #ffffff;
 }
 
+.event-detail-container {
+    background-color: rgba(100%, 100%, 100%, 0.859);
+    margin: 0% 2% 0% 2%;
+    padding: 2%;
+}
+
+.event-detail-thumbnail {
+    width: 30%;
+    height: 30%;
+}
+
 .navbar {
     height: 5%;
 }

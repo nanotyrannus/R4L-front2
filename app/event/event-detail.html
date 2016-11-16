@@ -1,0 +1,15 @@
+<div class="event-detail-container">
+    <img class="event-detail-thumbnail" [src]="event.thumbnail">
+    <span class="glyphicon glyphicon-trash" (click)="deleteEvent()"></span>
+    <form>
+        <div class="input-group">
+            <span class="input-group-addon">Name</span><input class="form-control" type="text" placeholder="{{ event.name }}">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Desc</span><textarea (keydown)="test()" class="form-control" type="text" placeholder="{{ event.description }}"></textarea>
+        </div>
+    </form>
+    <div class="event-data-container">
+
+    </div>
+</div>

@@ -55,10 +55,10 @@ export class EventComponent {
         return this.userService.isAdmin
     }
 
-    public setEvent(value: Event) {
+    public setEvent(value: Event, redirectTo: string = "/map") {
         this.eventService.currentEvent = value
         console.log(`boundingbox`, value.boundingBox)
-        this.router.navigate(['/map'])
+        this.router.navigate([redirectTo])
     }
 
     private logout(): void {
