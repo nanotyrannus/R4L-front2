@@ -49,6 +49,14 @@ export class EventService {
         })
     }
 
+    public updateMetaData(values: any): Observable<Response> {
+        return this.rest.post(`/event/${ this.currentEvent.id }/meta`, values)
+    }
+
+    public getEventTotals(): Observable<Response> {
+        return this.rest.get(`/event/${ this.currentEvent.id }/data`)
+    }
+
     public test() {
         console.log("test() called")
     }

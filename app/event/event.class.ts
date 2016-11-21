@@ -5,7 +5,9 @@ export class Event {
                 private _thumbnail: string,
                 private _sites: number,
                 private _id: number,
-                private _boundingBox: any) {
+                private _boundingBox: any,
+                private _startDate: string,
+                private _endDate: string) {
     }
 
     get name(): string {
@@ -30,5 +32,13 @@ export class Event {
 
     get boundingBox():any {
         return this._boundingBox
+    }
+
+    get startDate(): string {
+        return this._startDate
+    }
+
+    get endDate(): string {
+        return this._endDate
     }
 }

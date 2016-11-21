@@ -107,7 +107,7 @@
                             <span *ngIf="isAdmin()" class="glyphicon glyphicon-pencil" (click)="setEvent(event, 'details')" aria-hidden="true"></span>
                             <span>{{ event.name | uppercase }}</span>
                         </div>
-                        <div class="event-body">The {{ event.name }} event has {{ event.sites }} sites to be evaluated.</div>
+                        <div class="event-body">{{ event.description }}</div>
 
                     </div>
 

@@ -10,6 +10,11 @@ import { Router } from "@angular/router"
 
 export class EventDetailComponent {
     private _event: Event
+    private startDate: string = null
+    private endDate: string = null
+    private description: string = null
+    private name: string = null
+    private rows: any[]
     /**
      * TODO: modify EventService to allow mutation/deletion of events
      */
@@ -20,6 +25,10 @@ export class EventDetailComponent {
         } catch (err) {
             this.router.navigate(['/events'])
         }
+    }
+
+    ngOnInit() {
+        this.getEventTotals()
     }
 
     get event(): Event {
@@ -34,7 +43,24 @@ export class EventDetailComponent {
         })
     }
 
-    private test() {
-        console.log("test")
+    private updateEventData(): void {
+        let data: any = {}
+        if (this.name !== null) data.name = this.name
+        if (this.startDate !== null) data.start_date = this.startDate
+        if (this.endDate !== null) data.end_date = this.endDate
+        if (this.description !== null) data.description = this.description
+        this.eventService.updateMetaData(data).subscribe(data => {console.log(data.json())}, error => {console.error(error)})
+    }
+
+    private getEventTotals(): void {
+        this.eventService.getEventTotals().subscribe(data => {
+            this.rows = data.json()
+        }, error=> {console.error(error)})
+    }
+
+    private test(event: any) {
+        console.log(this.startDate)
+        event.preventDefault()
+        console.log("test", event)
     }
 }

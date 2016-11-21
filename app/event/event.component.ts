@@ -29,8 +29,13 @@ export class EventComponent {
             data => {
                 let eventResponse = data.json()
                 eventResponse.forEach((event) => {
-                    console.log(`${event.name} has ${ event.site_count } sites`)
-                    this.events.push(new Event(event.name, event.description, event.thumbnail, event.site_count, event.id, [[event.south, event.west], [event.north, event.east]]))
+                    if (Date.now() > Date.parse(event.end_date) && !this.userService.isAdmin) {
+                        // if NOW > end_date, then the campaign has ended.
+                        // Do not render event.
+                        return
+                    }
+                    console.log(`${event.name} has ${ event.site_count } sites`, event)
+                    this.events.push(new Event(event.name, event.description, event.thumbnail, event.site_count, event.id, [[event.south, event.west], [event.north, event.east]], event.start_date, event.end_date))
                 })
                 // console.log(events.forEach)
             },
@@ -45,8 +50,8 @@ export class EventComponent {
         this.events.push(event)
     }
 
-    private deleteEvent(id: number): void {
-        this.eventService.deleteEvent(id).subscribe(
+    private deleteEvent(): void {
+        this.eventService.deleteEvent().subscribe(
             data => {console.log(data.json())}, error => {console.error(error)}
         )
     }

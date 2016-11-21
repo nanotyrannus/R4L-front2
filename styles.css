@@ -51,6 +51,21 @@
     height: 30%;
 }
 
+.event-data-container {
+    height: 30%;
+    overflow-y: scroll;
+}
+
+.back-button {
+    position: absolute;
+    top: 3%;
+    right: 3%
+}
+
+.back-button:hover {
+    color: rgb(39.4%, 39.4%, 39.4%);
+}
+
 .navbar {
     height: 5%;
 }
