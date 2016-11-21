@@ -11,11 +11,11 @@
                 [(ngModel)]="name" name="name">
         </div>
         <div class="input-group">
-            <span class="input-group-addon">Start: {{ event.startDate }}</span><input type="date" class="form-control" [(ngModel)]="startDate"
+            <span class="input-group-addon">Start: {{ event.startDate?.substring(0, 10) }}</span><input type="date" class="form-control" [(ngModel)]="startDate"
                 name="start">
         </div>
         <div class="input-group">
-            <span class="input-group-addon">End: {{ event.endDate }}</span><input type="date" class="form-control" [(ngModel)]="endDate"
+            <span class="input-group-addon">End: {{ event.endDate?.substring(0, 10) }}</span><input type="date" class="form-control" [(ngModel)]="endDate"
                 name="end">
         </div>
         <div class="input-group">

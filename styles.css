@@ -54,9 +54,18 @@
     background-size: cover;
 }
 
+.upload-container {
+    background-color: rgba(100%, 100%, 100%, 0.87);
+}
+
 .event-card {
     color: #000000;
     background-color: #ffffff;
+}
+
+.event-navbar {
+    background-color: rgb(100%, 100%, 100%);
+    border-radius: 0 0 4px 4px;
 }
 
 .event-detail-container {
