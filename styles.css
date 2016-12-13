@@ -14,12 +14,26 @@
     .login-container {
         margin-top: 0%;
     }
+.vote-button {
+    color: black;
+    height: 60%;
+    width: 16%;
+    margin: 0 1% 0 1%;
+}
     .hide-on-small {
         display: none;
     }
     .show-on-small {
         display: initial;
     }
+}
+@media (min-width: 769px) {
+.vote-button {
+    color: black;
+    height: 70px;
+    width: 70px;
+    margin: 0 1% 0 1%;
+}
 }
 
 #map {
@@ -140,12 +154,7 @@
     position: absolute;
 }
 
-.vote-button {
-    color: black;
-    height: 60%;
-    width: 16%;
-    margin: 0 1% 0 1%;
-}
+
 
 .polygon-detail {
     position: absolute;

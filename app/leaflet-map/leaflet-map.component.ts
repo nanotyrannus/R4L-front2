@@ -147,13 +147,14 @@ export class LeafletMapComponent implements OnInit {
 
     private initMapLayer(): void {
         this.satelliteLayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            attribution: 'after',
             maxZoom: 19,
             id: 'your.mapbox.project.id',
             accessToken: 'pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw'
         })
         this.terrainLayer = L.tileLayer('https://api.mapbox.com/styles/v1/nanotyrannus/citosvy3f00082il18xi6kuw9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmFub3R5cmFubnVzIiwiYSI6ImNpcnJtMmNubDBpZTN0N25rZmMxaHg4ZHQifQ.vj7pif8Z4BVhbYs55s1tAw', {
-            maxZoon: 19,
+            attribution: 'before',
+            maxZoom: 19,
             id: 'your.mapbox.project.id'
         })
         this.satelliteLayer.addTo(this.leafletMap)

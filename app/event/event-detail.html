@@ -2,8 +2,8 @@
     <div class="back-button"><button class="btn btn-default" routerLink="/events"><span class="glyphicon glyphicon-arrow-left"></span></button></div>
     <img class="event-detail-thumbnail" [src]="event.thumbnail">
     <div class="btn-group-vertical" role="group">
-        <button class="btn btn-default"><span class="glyphicon glyphicon-trash" (click)="deleteEvent()"></span>DELETE event</button>
-        <button class="btn btn-default">END campaign</button>
+        <button class="btn btn-default" (click)="deleteEvent()"><span class="glyphicon glyphicon-trash"></span>DELETE event</button>
+        <button class="btn btn-default" (click)="endCampaign()">END campaign</button>
     </div>
     <form>
         <div class="input-group">

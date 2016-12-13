@@ -52,6 +52,11 @@ export class EventDetailComponent {
         this.eventService.updateMetaData(data).subscribe(data => {console.log(data.json())}, error => {console.error(error)})
     }
 
+    private endCampaign(): void {
+        this.endDate = (new Date()).toISOString()
+        this.updateEventData()
+    }
+
     private getEventTotals(): void {
         this.eventService.getEventTotals().subscribe(data => {
             this.rows = data.json()
